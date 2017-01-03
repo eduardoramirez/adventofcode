@@ -31,16 +31,13 @@ def part1():
     x = 0
     y = 0
 
-    for instruction in get_instructions():
-        (orientation, length) = instruction
-
+    for (orientation, length) in get_instructions():
         if orientation in [0, 2]:
             x += length
         else:
             y += length
 
-    blocks = abs(x) + abs(y)
-    print 'Part 1: ' + str(blocks)
+    return abs(x) + abs(y)
 
 
 def part2():
@@ -50,9 +47,7 @@ def part2():
 
     visited_map[(0, 0)] = True
 
-    for instruction in get_instructions():
-        (orientation, length) = instruction
-
+    for (orientation, length) in get_instructions():
         steps = range(length, 0)[::-1] if orientation in [0, 3] else range(1, length + 1)
         (previous_x, previous_y) = previously_visited
 
@@ -69,10 +64,9 @@ def part2():
             break
 
     (x, y) = double_whammy
-    blocks = abs(x) + abs(y)
-    print 'Part 2: ' + str(blocks)
+    return abs(x) + abs(y)
 
 
 if __name__ == '__main__':
-    part1()
-    part2()
+    print 'Part 1: ' + str(part1())
+    print 'Part 2: ' + str(part2())
