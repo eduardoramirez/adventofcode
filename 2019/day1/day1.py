@@ -1,6 +1,6 @@
 import math
 
-INPUT = open('day1.txt', 'r').read().split()
+INPUT = open('input.txt', 'r').read().split()
 masses = list(map(lambda l: int(l), INPUT))
 
 def fuel(mass):
