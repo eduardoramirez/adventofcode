@@ -1,44 +1,41 @@
 import copy
 
 INPUT = open('input.txt', 'r').read().split(',')
-initial_program = list(map(lambda l: int(l), INPUT))
+initial_memory = list(map(lambda l: int(l), INPUT))
 
 HALT = 99
 STEP = 4
 ADD  = 1
 MULT = 2
 
-def run(program, current_pos=0):
-    retrieve_var = lambda pos: program[program[pos]]
 
-    while program[current_pos] != HALT:
-        result = None
+def run(memory, noun, verb):
+    memory[1] = noun
+    memory[2] = verb
 
-        opcode = program[current_pos]
-        var1 = retrieve_var(current_pos + 1)
-        var2 = retrieve_var(current_pos + 2)
-        store_pos = program[current_pos + 3]
+    ptr = 0
+    while memory[ptr] != HALT:
+        opcode = memory[ptr]
+        param1_ptr = memory[ptr + 1]
+        param2_ptr = memory[ptr + 2]
+        store_ptr = memory[ptr + 3]
 
         if opcode == ADD:
-            result = var1 + var2
+            memory[store_ptr] = memory[param1_ptr] + memory[param2_ptr]
         elif opcode == MULT:
-            result = var1 * var2
+            memory[store_ptr] = memory[param1_ptr] * memory[param2_ptr]
         else:
             raise Exception('UNKOWN OPCODE: {}'.format(opcode))
 
-        # store result
-        program[store_pos] = result
-
         # advance the program
-        current_pos += STEP
+        ptr += STEP
+
+    return memory[0]
 
 
 def part1():
-    program = copy.deepcopy(initial_program)
-    program[1] = 12
-    program[2] = 2
-    run(program)
-    return program[0]
+    memory = copy.deepcopy(initial_memory)
+    return run(memory, noun=12, verb=2)
 
 
 def part2():
@@ -46,15 +43,12 @@ def part2():
 
     for noun in range(0, 100):
         for verb in range(0, 100):
-            program = copy.deepcopy(initial_program)
+            memory = copy.deepcopy(initial_memory)
+            res = run(memory, noun, verb)
 
-            program[1] = noun
-            program[2] = verb
-
-            run(program)
-
-            if program[0] == desired:
+            if res == desired:
                 return 100 * noun + verb
+
 
 if __name__ == '__main__':
     print('Part 1: {}'.format(part1()))

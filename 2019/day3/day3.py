@@ -41,8 +41,7 @@ def part1():
 
     intersections = list(wire_1.intersection(wire_2))
 
-    man_dist = sorted([manhattan_dist(root, p) for p in intersections])
-    return man_dist[0]
+    return min([manhattan_dist(root, p) for p in intersections])
 
 
 def part2():
@@ -56,8 +55,7 @@ def part2():
     intersections = list(set(wire_1_points).intersection(set(wire_2_points)))
 
     # 2 is to account for omitted roots
-    total_steps = sorted([2 + wire_1_idx[itx] + wire_2_idx[itx] for itx in intersections])
-    return total_steps[0]
+    return min([2 + wire_1_idx[itx] + wire_2_idx[itx] for itx in intersections])
 
 
 if __name__ == '__main__':
