@@ -15,7 +15,7 @@ def reverse(ls):
     return ls[::-1]
 
 
-def run(memory, part2=False):
+def run(memory):
     ptr = 0
     while memory[ptr] != HALT:
         instr = str(memory[ptr])
@@ -25,56 +25,49 @@ def run(memory, part2=False):
         opcode = int(instr[-2:])
         param_modes = reverse([int(n) for n in instr[:3]])
 
-        param = lambda p, i: memory[memory[p+i]] if param_modes[i-1] == 0 else memory[p+i]
+        deref = lambda i: memory[ptr+i]
+        param = lambda i: memory[deref(i)] if param_modes[i-1] == 0 else deref(i)
 
         if opcode == ADD:
-            memory[memory[ptr+3]] = param(ptr, 1) + param(ptr, 2)
+            memory[deref(3)] = param(1) + param(2)
             ptr += 4
         elif opcode == MULT:
-            memory[memory[ptr+3]] = param(ptr, 1) * param(ptr, 2)
+            memory[deref(3)] = param(1) * param(2)
             ptr += 4
         elif opcode == SAVE:
-            memory[memory[ptr+1]] = int(input('Input: '))
+            memory[deref(1)] = int(input('Input: '))
             ptr += 2
         elif opcode == PRINT:
-            print('Output: {}'.format(param(ptr, 1)))
+            print('Output: {}'.format(param(1)))
             ptr += 2
-        elif part2 and opcode == JUMP_TRUE:
-            if param(ptr, 1) != 0:
-                ptr = param(ptr, 2)
+        elif opcode == JUMP_TRUE:
+            if param(1) != 0:
+                ptr = param(2)
             else:
                 ptr += 3
-        elif part2 and opcode == JUMP_FALSE:
-            if param(ptr, 1) == 0:
-                ptr = param(ptr, 2)
+        elif opcode == JUMP_FALSE:
+            if param(1) == 0:
+                ptr = param(2)
             else:
                 ptr += 3
-        elif part2 and opcode == LT:
-            if param(ptr, 1) < param(ptr, 2):
-                memory[memory[ptr+3]] = 1
+        elif opcode == LT:
+            if param(1) < param(2):
+                memory[deref(3)] = 1
             else:
-                memory[memory[ptr+3]] = 0
+                memory[deref(3)] = 0
             ptr += 4
-        elif part2 and opcode == EQ:
-            if param(ptr, 1) == param(ptr, 2):
-                memory[memory[ptr+3]] = 1
+        elif opcode == EQ:
+            if param(1) == param(2):
+                memory[deref(3)] = 1
             else:
-                memory[memory[ptr+3]] = 0
+                memory[deref(3)] = 0
             ptr += 4
         else:
             raise Exception('UNKOWN OPCODE: {}'.format(opcode))
 
 
-def part1():
-    run(initial_memory[:])
-
-
-def part2():
-    run(initial_memory[:], part2=True)
-
-
 if __name__ == '__main__':
     print('Part 1:')
-    part1()
+    run(initial_memory[:])
     print('Part 2:')
-    part2()
+    run(initial_memory[:])
