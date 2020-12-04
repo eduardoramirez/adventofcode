@@ -1,4 +1,3 @@
-
 INPUT = open('input.txt', 'r').read().split('\n')
 
 entries = filter(lambda l: l != '', INPUT)
