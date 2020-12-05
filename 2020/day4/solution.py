@@ -25,7 +25,7 @@ def part1():
     if 'cid' in fields:
       fields.remove('cid')
 
-    valid += fields == required if 1 else 0
+    valid += int(fields == required)
 
   return valid
 
@@ -52,11 +52,11 @@ def part2():
         elif v[-2:] == 'in':
           return 59 <= int(v[0:-2]) <= 76
       elif f == 'hcl':
-        return re.match('^\#[0-9a-f]{6}$', v) if True else False
+        return bool(re.match('^\#[0-9a-f]{6}$', v))
       elif f == 'ecl':
         return v in ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth']
       elif f == 'pid':
-        return re.match('^\d{9}$', v) if True else False
+        return bool(re.match('^\d{9}$', v))
       return False
 
     is_valid = fields == required and all(is_field_valid(f, passport[f]) for f in required) 
